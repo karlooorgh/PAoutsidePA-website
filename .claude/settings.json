@@ -1,7 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "Bash(grep -o 'https\\\\?://[^/\"\"\"\"'\"''''\"]* ' \"c:\\\\Users\\\\knd246\\\\Dropbox\\\\97 pa_outside_pa\\\\hjemmeside\\\\PAoutsidePA-website\\\\index.html\")"
+      "Bash(grep -o 'https\\\\?://[^/\"\"\"\"'\"''''\"]* ' \"c:\\\\Users\\\\knd246\\\\Dropbox\\\\97 pa_outside_pa\\\\hjemmeside\\\\PAoutsidePA-website\\\\index.html\")",
+      "Read(//c/Users/knd246/Dropbox/**)"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\knd246\\Dropbox"
     ]
   }
 }

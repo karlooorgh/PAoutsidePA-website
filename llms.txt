@@ -1,0 +1,27 @@
+# PA outside PA — The Archive of Public Administration outside Public Administration
+
+> A curated archive of 600+ public administration research articles published in top social science journals outside the PA field.
+
+## About
+
+This site accompanies the article:
+
+Olsen, A.L., Bendtsen, K.-E. & van Leeuwen, P. (2026). "Public Administration Beyond Public Administration Journals." PS: Political Science & Politics. https://doi.org/10.1017/S1049096526101942
+
+Public administration (PA) research is widely published in leading social science journals — APSR, AJPS, JOP, and many others — yet this work is often invisible to PA scholars who primarily read PA-specific outlets. This archive catalogues that research.
+
+## Pages
+
+- https://paopa.org/ — Main archive. Searchable table of 600+ articles with authors, journal, year, PA concept, discipline, and citation counts. Each entry includes an abstract.
+- https://paopa.org/network.html — Interactive direct citation network visualization.
+- https://paopa.org/network-cocitation.html — Interactive co-citation network visualization.
+- https://paopa.org/network-coupling.html — Interactive bibliographic coupling network visualization.
+
+## Maintainers
+
+- Asmus Leth Olsen — https://asmusolsen.com/
+- Karl-Emil Bendtsen — https://karlemilbendtsen.github.io/
+
+## Data
+
+Citation data sourced from OpenAlex (https://openalex.org). The archive is available for download as a BibTeX file from the main page.

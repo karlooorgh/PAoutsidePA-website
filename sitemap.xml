@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://paopa.org/</loc>
+    <lastmod>2026-03-30</lastmod>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://paopa.org/network.html</loc>
+    <lastmod>2026-03-30</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://paopa.org/network-cocitation.html</loc>
+    <lastmod>2026-03-30</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://paopa.org/network-coupling.html</loc>
+    <lastmod>2026-03-30</lastmod>
+    <priority>0.8</priority>
+  </url>
+</urlset>
