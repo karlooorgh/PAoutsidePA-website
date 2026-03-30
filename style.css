@@ -1,0 +1,144 @@
+/* Public Administration Beyond PA Journals — Stylesheet */
+
+body {
+    font-family: "Times New Roman", Times, serif;
+    background-color: #f0f0f0;
+    color: #222;
+    margin: 0;
+    padding: 20px;
+}
+
+#container {
+    max-width: 1000px;
+    margin: 0 auto;
+    background-color: #fafafa;
+    border: 1px solid #ccc;
+    padding: 25px 35px;
+}
+
+.summary {
+    font-style: italic;
+    color: #555;
+}
+
+h1 {
+    font-size: 1.6em;
+    margin-bottom: 2px;
+    color: #1a1a1a;
+}
+
+h2 {
+    font-size: 1.2em;
+    color: #333;
+    margin-top: 30px;
+}
+
+.subtitle {
+    font-size: 1.0em;
+    font-style: italic;
+    color: #555;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #999;
+    margin: 12px 0 20px 0;
+}
+
+p {
+    line-height: 1.6;
+    font-size: 0.95em;
+}
+
+a:link {
+    color: #000080;
+}
+
+a:visited {
+    color: #551a8b;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+table {
+    border: 2px solid #666;
+    border-collapse: separate;
+    border-spacing: 2px;
+    width: 100%;
+    font-size: 0.88em;
+    margin-top: 10px;
+}
+
+th {
+    background-color: #d0d0d0;
+    border: 1px solid #999;
+    padding: 5px 8px;
+    text-align: left;
+    font-weight: bold;
+}
+
+td {
+    background-color: #fff;
+    border: 1px solid #bbb;
+    padding: 4px 8px;
+}
+
+details summary {
+    cursor: pointer;
+}
+
+details summary:hover {
+    color: #000080;
+}
+
+.abstract {
+    font-size: 0.9em;
+    color: #444;
+    line-height: 1.5;
+    margin: 6px 0 2px 0;
+    padding: 4px 8px;
+    background-color: #f4f4f0;
+    border-left: 2px solid #999;
+}
+
+.footer {
+    margin-top: 30px;
+    font-size: 0.82em;
+    color: #666;
+    border-top: 1px solid #ccc;
+    padding-top: 10px;
+}
+
+.updated {
+    font-size: 0.80em;
+    color: #888;
+    margin-top: 4px;
+}
+
+#searchBox {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 0.95em;
+    padding: 5px 8px;
+    border: 1px solid #999;
+    background-color: #fff;
+}
+
+.btn-download {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 0.88em;
+    padding: 5px 12px;
+    background-color: #d0d0d0;
+    border: 1px solid #999;
+    color: #222;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.btn-download:hover {
+    background-color: #bbb;
+}
