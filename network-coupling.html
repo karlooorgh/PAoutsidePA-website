@@ -3,16 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Interactive bibliographic coupling network of public administration research published outside PA journals. See which articles share common references.">
-    <link rel="canonical" href="https://paopa.org/network-coupling.html">
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Bibliographic Coupling Network — PA outside PA">
-    <meta property="og:description" content="Interactive bibliographic coupling network of PA research published outside PA journals.">
-    <meta property="og:url" content="https://paopa.org/network-coupling.html">
-    <meta property="og:site_name" content="PA outside PA">
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Bibliographic Coupling Network — PA outside PA">
-    <meta name="twitter:description" content="Interactive bibliographic coupling network of PA research published outside PA journals.">
     <title>Bibliographic Coupling Network &mdash; PA outside PA</title>
     <style>
         body {
@@ -78,7 +68,7 @@
             font-size: 0.9em;
             flex-wrap: wrap;
         }
-        .controls select, .controls input[type="range"] {
+        .controls select, .controls input[type="range"], .controls input[type="number"] {
             font-family: "Times New Roman", Times, serif;
             font-size: 0.95em;
         }
@@ -128,6 +118,12 @@
             <input type="range" id="citeFilter" min="0" max="500" value="0" style="width:120px;">
             <span id="citeVal">0</span>
         </label>
+        <label>| Years:
+            <input type="number" id="yearFrom" style="width:72px;">
+            &ndash;
+            <input type="number" id="yearTo" style="width:72px;">
+            <button type="button" id="yearReset">All</button>
+        </label>
     </div>
 
     <div id="legendBox"></div>
@@ -141,7 +137,7 @@
     </div>
 
     <div class="footer">
-        <p>Based on Olsen, Bendtsen &amp; van Leeuwen (2026). Citation data from <a href="https://openalex.org" target="_blank" rel="noopener">OpenAlex</a>. Site maintained by <a href="https://karlemilbendtsen.github.io/" target="_blank" rel="noopener">Karl-Emil Bendtsen</a> and <a href="https://asmusolsen.com/" target="_blank" rel="noopener">Asmus Leth Olsen</a>.</p>
+        <p>Based on Olsen, Bendtsen &amp; van Leeuwen (2026). Citation data from <a href="https://openalex.org">OpenAlex</a>.</p>
     </div>
 </div>
 
@@ -210,6 +206,18 @@
     var simulation, nodeSel;
     var activeNodes = [], activeLinks = [];
     var wScale = function() { return 0.5; };
+    var validYears = raw.nodes.map(function(n) { return n.year; }).filter(function(y) { return y > 0; });
+    var minYearAll = d3.min(validYears) || 0;
+    var maxYearAll = d3.max(validYears) || 0;
+
+    d3.select("#yearFrom")
+        .attr("min", minYearAll)
+        .attr("max", maxYearAll)
+        .property("value", minYearAll);
+    d3.select("#yearTo")
+        .attr("min", minYearAll)
+        .attr("max", maxYearAll)
+        .property("value", maxYearAll);
 
     function drawEdges() {
         ctx.save();
@@ -231,6 +239,15 @@
 
     function render() {
         var minCites = +d3.select("#citeFilter").property("value");
+        var yearFrom = +d3.select("#yearFrom").property("value");
+        var yearTo = +d3.select("#yearTo").property("value");
+        if (yearFrom > yearTo) {
+            var tmp = yearFrom;
+            yearFrom = yearTo;
+            yearTo = tmp;
+            d3.select("#yearFrom").property("value", yearFrom);
+            d3.select("#yearTo").property("value", yearTo);
+        }
         var showDisc = {
             Econ: d3.select("#showEcon").property("checked"),
             PolSci: d3.select("#showPolSci").property("checked"),
@@ -239,15 +256,11 @@
             PA: d3.select("#showPA").property("checked")
         };
 
-        var nodes = raw.nodes.filter(function(n) { return showDisc[n.discipline] && n.cites >= minCites; });
-
-        var linkedIds = new Set();
-        raw.links.forEach(function(l) {
-            var s = typeof l.source === "object" ? l.source.id : l.source;
-            var t = typeof l.target === "object" ? l.target.id : l.target;
-            linkedIds.add(s); linkedIds.add(t);
+        var nodes = raw.nodes.filter(function(n) {
+            var hasDiscipline = showDisc[n.discipline];
+            var inYearRange = !n.year || (n.year >= yearFrom && n.year <= yearTo);
+            return hasDiscipline && n.cites >= minCites && inYearRange;
         });
-        nodes = nodes.filter(function(n) { return linkedIds.has(n.id); });
 
         var nodeIds = new Set();
         nodes.forEach(function(n) { nodeIds.add(n.id); });
@@ -262,6 +275,18 @@
                 target: typeof l.target === "object" ? l.target.id : l.target,
                 weight: l.weight || 1
             };
+        });
+
+        var linkedIds = new Set();
+        links.forEach(function(l) {
+            linkedIds.add(l.source);
+            linkedIds.add(l.target);
+        });
+        nodes = nodes.filter(function(n) { return linkedIds.has(n.id); });
+        nodeIds = new Set();
+        nodes.forEach(function(n) { nodeIds.add(n.id); });
+        links = links.filter(function(l) {
+            return nodeIds.has(l.source) && nodeIds.has(l.target);
         });
 
         activeNodes = nodes;
@@ -331,6 +356,12 @@
     d3.selectAll("#showEcon, #showPolSci, #showSoc, #showGenSci, #showPA").on("change", render);
     d3.select("#citeFilter").on("input", function() {
         d3.select("#citeVal").text(this.value);
+        render();
+    });
+    d3.selectAll("#yearFrom, #yearTo").on("input", render);
+    d3.select("#yearReset").on("click", function() {
+        d3.select("#yearFrom").property("value", minYearAll);
+        d3.select("#yearTo").property("value", maxYearAll);
         render();
     });
 
