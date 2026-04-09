@@ -383,28 +383,87 @@ details summary:hover {
     }
 
     .articles-table tr {
-        display: block;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 10px;
         width: 100%;
         border: 1px solid #bbb;
         background-color: #fff;
+        padding: 12px;
     }
 
     .articles-table td {
-        display: grid;
-        grid-template-columns: minmax(88px, 104px) minmax(0, 1fr);
-        gap: 10px;
+        display: block;
         border: none;
-        border-bottom: 1px solid #e0e0e0;
-        padding: 8px 12px;
+        padding: 0;
         background: transparent;
     }
 
-    .articles-table td:last-child {
-        border-bottom: none;
+    .articles-table td::before {
+        content: none;
     }
 
-    .articles-table td::before {
-        content: attr(data-label);
+    .articles-table td:nth-child(3) {
+        order: 1;
+        flex: 0 0 100%;
+        font-size: 0.98em;
+        line-height: 1.35;
+    }
+
+    .articles-table td:nth-child(2) {
+        order: 2;
+        flex: 0 0 100%;
+        font-size: 0.92em;
+        color: #555;
+        padding-bottom: 2px;
+    }
+
+    .articles-table td:nth-child(1),
+    .articles-table td:nth-child(4),
+    .articles-table td:nth-child(6),
+    .articles-table td:nth-child(7) {
+        display: inline-flex;
+        align-items: center;
+        padding: 3px 8px;
+        border: 1px solid #d7d7d7;
+        background: #f5f5f5;
+        border-radius: 999px;
+        font-size: 0.78em;
+        line-height: 1.2;
+        color: #444;
+        white-space: nowrap;
+    }
+
+    .articles-table td:nth-child(1) {
+        order: 3;
+    }
+
+    .articles-table td:nth-child(4) {
+        order: 4;
+    }
+
+    .articles-table td:nth-child(6) {
+        order: 5;
+    }
+
+    .articles-table td:nth-child(7) {
+        order: 6;
+    }
+
+    .articles-table td:nth-child(7)::after {
+        content: " cites";
+    }
+
+    .articles-table td:nth-child(5) {
+        order: 7;
+        flex: 0 0 100%;
+        padding-top: 2px;
+        font-size: 0.88em;
+        color: #444;
+    }
+
+    .articles-table td:nth-child(5)::before {
+        content: "PA Concept: ";
         font-weight: bold;
         color: #555;
     }
@@ -419,6 +478,7 @@ details summary:hover {
 
     .articles-table summary {
         word-break: break-word;
+        line-height: 1.35;
     }
 
     .abstract {
@@ -428,8 +488,20 @@ details summary:hover {
 }
 
 @media (max-width: 440px) {
-    .articles-table td {
-        grid-template-columns: 1fr;
-        gap: 4px;
+    .articles-table tr {
+        gap: 7px 8px;
+        padding: 10px;
+    }
+
+    .articles-table td:nth-child(3) {
+        font-size: 0.94em;
+    }
+
+    .articles-table td:nth-child(1),
+    .articles-table td:nth-child(4),
+    .articles-table td:nth-child(6),
+    .articles-table td:nth-child(7) {
+        font-size: 0.74em;
+        padding: 3px 7px;
     }
 }
