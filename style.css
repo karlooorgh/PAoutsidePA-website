@@ -1,4 +1,8 @@
-/* Public Administration Beyond PA Journals — Stylesheet */
+/* Public Administration Beyond PA Journals - Stylesheet */
+
+* {
+    box-sizing: border-box;
+}
 
 body {
     font-family: "Times New Roman", Times, serif;
@@ -9,16 +13,47 @@ body {
 }
 
 #container {
-    max-width: 1000px;
+    max-width: 1150px;
     margin: 0 auto;
     background-color: #fafafa;
     border: 1px solid #ccc;
     padding: 25px 35px;
+    overflow-wrap: anywhere;
 }
 
 .summary {
     font-style: italic;
     color: #555;
+}
+
+.site-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 25px;
+    margin-bottom: 10px;
+}
+
+.site-logo {
+    width: 192px;
+    height: auto;
+    flex-shrink: 0;
+}
+
+.site-header-copy {
+    min-width: 0;
+}
+
+.hero-quote {
+    margin: 10px 0 0 0;
+    padding: 8px 12px;
+    border-left: 3px solid #666;
+    font-style: italic;
+    color: #444;
+}
+
+.hero-quote-attrib {
+    font-style: normal;
+    font-size: 0.9em;
 }
 
 h1 {
@@ -52,6 +87,11 @@ p {
     font-size: 0.95em;
 }
 
+img {
+    max-width: 100%;
+    height: auto;
+}
+
 a:link {
     color: #000080;
 }
@@ -79,12 +119,16 @@ th {
     padding: 5px 8px;
     text-align: left;
     font-weight: bold;
+    vertical-align: top;
 }
 
 td {
     background-color: #fff;
     border: 1px solid #bbb;
     padding: 4px 8px;
+    vertical-align: top;
+    word-break: normal;
+    overflow-wrap: break-word;
 }
 
 details summary {
@@ -119,12 +163,98 @@ details summary:hover {
     margin-top: 4px;
 }
 
+.notice-wip {
+    color: #b00000;
+    font-weight: bold;
+}
+
+.notice-wip-centered {
+    text-align: center;
+}
+
+.network-links {
+    margin-bottom: 0;
+}
+
+.journals-details {
+    margin: 0 0 14px 0;
+}
+
+.journals-details summary {
+    cursor: pointer;
+}
+
+.toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.search-count {
+    font-size: 0.85em;
+    color: #666;
+    margin: 0 0 8px 0;
+}
+
+.table-scroll {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.articles-table {
+    min-width: 980px;
+    table-layout: fixed;
+}
+
+.articles-table .col-year {
+    width: 5%;
+}
+
+.articles-table .col-authors {
+    width: 13%;
+}
+
+.articles-table .col-title {
+    width: 50%;
+}
+
+.articles-table .col-journal {
+    width: 8%;
+}
+
+.articles-table .col-concept {
+    width: 12%;
+}
+
+.articles-table .col-discipline {
+    width: 7%;
+}
+
+.articles-table .col-citations {
+    width: 5%;
+}
+
+.articles-table th:nth-child(1),
+.articles-table td:nth-child(1),
+.articles-table th:nth-child(4),
+.articles-table td:nth-child(4),
+.articles-table th:nth-child(6),
+.articles-table td:nth-child(6),
+.articles-table th:nth-child(7),
+.articles-table td:nth-child(7) {
+    white-space: nowrap;
+}
+
 #searchBox {
     font-family: "Times New Roman", Times, serif;
     font-size: 0.95em;
     padding: 5px 8px;
     border: 1px solid #999;
     background-color: #fff;
+    flex: 1;
+    min-width: 0;
 }
 
 .btn-download {
@@ -141,4 +271,165 @@ details summary:hover {
 
 .btn-download:hover {
     background-color: #bbb;
+}
+
+@media (max-width: 960px) {
+    body {
+        padding: 14px;
+    }
+
+    #container {
+        padding: 22px 24px;
+    }
+
+    .site-header {
+        gap: 18px;
+    }
+
+    .site-logo {
+        width: 148px;
+    }
+
+    .toolbar {
+        flex-wrap: wrap;
+    }
+
+    .articles-table {
+        min-width: 920px;
+        font-size: 0.84em;
+    }
+}
+
+@media (max-width: 700px) {
+    body {
+        padding: 10px;
+    }
+
+    #container {
+        padding: 18px 16px;
+    }
+
+    h1 {
+        font-size: 1.35em;
+    }
+
+    h2 {
+        margin-top: 24px;
+    }
+
+    .site-header {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .site-logo {
+        width: 120px;
+    }
+
+    .hero-quote {
+        font-size: 0.92em;
+        padding: 8px 10px;
+    }
+
+    .toolbar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+
+    #searchBox,
+    .btn-download {
+        width: 100%;
+    }
+
+    .btn-download {
+        text-align: center;
+        padding: 8px 12px;
+    }
+
+    .table-scroll {
+        overflow: visible;
+    }
+
+    .articles-table {
+        min-width: 0;
+        width: 100%;
+        border: none;
+        table-layout: auto;
+        border-spacing: 0;
+        margin-top: 12px;
+        background: transparent;
+    }
+
+    .articles-table colgroup {
+        display: none;
+    }
+
+    .articles-table thead {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
+
+    .articles-table tbody {
+        display: grid;
+        gap: 12px;
+    }
+
+    .articles-table tr {
+        display: block;
+        width: 100%;
+        border: 1px solid #bbb;
+        background-color: #fff;
+    }
+
+    .articles-table td {
+        display: grid;
+        grid-template-columns: minmax(88px, 104px) minmax(0, 1fr);
+        gap: 10px;
+        border: none;
+        border-bottom: 1px solid #e0e0e0;
+        padding: 8px 12px;
+        background: transparent;
+    }
+
+    .articles-table td:last-child {
+        border-bottom: none;
+    }
+
+    .articles-table td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        color: #555;
+    }
+
+    .articles-table td > * {
+        min-width: 0;
+    }
+
+    .articles-table details {
+        width: 100%;
+    }
+
+    .articles-table summary {
+        word-break: break-word;
+    }
+
+    .abstract {
+        margin: 8px 0 0 0;
+        padding: 8px 10px;
+    }
+}
+
+@media (max-width: 440px) {
+    .articles-table td {
+        grid-template-columns: 1fr;
+        gap: 4px;
+    }
 }

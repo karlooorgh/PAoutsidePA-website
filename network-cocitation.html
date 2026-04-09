@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Co-citation Network &mdash; PA outside PA</title>
     <style>
+        * {
+            box-sizing: border-box;
+        }
         body {
             font-family: "Times New Roman", Times, serif;
             background-color: #f0f0f0;
@@ -18,14 +21,19 @@
             background-color: #fafafa;
             border: 1px solid #ccc;
             padding: 25px 35px;
+            overflow-wrap: anywhere;
         }
         h1 { font-size: 1.4em; margin-bottom: 2px; }
+        p { line-height: 1.6; }
         .subtitle { font-style: italic; color: #555; margin-top: 0; }
         hr { border: none; border-top: 1px solid #999; margin: 12px 0 20px 0; }
         a:link { color: #000080; }
         a:visited { color: #551a8b; }
         .nav {
             font-size: 0.92em;
+            margin-bottom: 12px;
+        }
+        .network-help {
             margin-bottom: 12px;
         }
         #legendBox {
@@ -53,24 +61,72 @@
             border: 1px solid #999;
             padding: 8px 12px;
             font-size: 0.85em;
-            max-width: 380px;
+            max-width: min(380px, calc(100vw - 24px));
             pointer-events: none;
             display: none;
             z-index: 10;
             line-height: 1.4;
         }
-        #network:active { cursor: grabbing; }
         .controls {
-            display: flex;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: 12px;
-            align-items: center;
-            margin: 10px 0;
+            align-items: start;
+            margin: 10px 0 14px 0;
             font-size: 0.9em;
+        }
+        .toggle-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 14px;
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            background: #fff;
+            grid-column: 1 / -1;
+        }
+        .toggle-group label {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            background: #fff;
+            min-width: 0;
+        }
+        .control-label {
+            font-weight: bold;
+            color: #444;
+        }
+        .range-control, .year-range {
+            display: flex;
+            align-items: center;
+            gap: 8px;
             flex-wrap: wrap;
         }
-        .controls select, .controls input[type="range"], .controls input[type="number"] {
+        .range-control input[type="range"] {
+            flex: 1;
+            min-width: 150px;
+        }
+        .year-range input[type="number"] {
+            width: 88px;
+        }
+        .controls select, .controls input[type="range"], .controls input[type="number"], .controls button {
             font-family: "Times New Roman", Times, serif;
             font-size: 0.95em;
+        }
+        .controls button {
+            padding: 4px 10px;
+            border: 1px solid #999;
+            background: #d0d0d0;
+            cursor: pointer;
+        }
+        .controls button:hover {
+            background: #bbb;
         }
         .back-link {
             font-size: 0.9em;
@@ -82,12 +138,90 @@
             color: #666;
             font-style: italic;
         }
+        .network-stage {
+            position: relative;
+            width: 100%;
+            height: 700px;
+            min-height: 420px;
+            border: 2px solid #666;
+            background: #fff;
+            overflow: hidden;
+        }
+        #edgeCanvas, #network {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        #network {
+            cursor: grab;
+            touch-action: none;
+        }
+        #network:active {
+            cursor: grabbing;
+        }
         .footer {
             margin-top: 20px;
             font-size: 0.82em;
             color: #666;
             border-top: 1px solid #ccc;
             padding-top: 10px;
+        }
+        @media (max-width: 960px) {
+            body {
+                padding: 14px;
+            }
+            #container {
+                padding: 22px 24px;
+            }
+            .controls {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+        @media (max-width: 640px) {
+            body {
+                padding: 10px;
+            }
+            #container {
+                padding: 18px 16px;
+            }
+            h1 {
+                font-size: 1.25em;
+            }
+            .controls {
+                grid-template-columns: 1fr;
+            }
+            .toggle-group, .control-group {
+                width: 100%;
+            }
+            .toggle-group label {
+                min-width: calc(50% - 8px);
+            }
+            .range-control, .year-range {
+                display: grid;
+                grid-template-columns: minmax(0, 1fr) auto;
+                align-items: center;
+            }
+            .range-control input[type="range"] {
+                min-width: 0;
+                width: 100%;
+            }
+            .year-range {
+                grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+            }
+            .year-range button {
+                grid-column: 1 / -1;
+                width: 100%;
+            }
+            .network-stage {
+                min-height: 340px;
+            }
+        }
+        @media (max-width: 420px) {
+            .toggle-group label {
+                min-width: 100%;
+            }
         }
     </style>
 </head>
@@ -100,30 +234,38 @@
     <p class="subtitle">An edge means two articles are both cited by the same third article in the archive. Edge thickness reflects co-citation frequency.</p>
     <hr>
 
-    <p>Each node is an article. Node size reflects citation count. Drag nodes to rearrange; scroll to zoom.</p>
+    <p class="network-help">Each node is an article. Node size reflects citation count. Drag nodes to rearrange; scroll to zoom. On touch devices, drag with one finger and pinch to zoom.</p>
 
     <div class="controls">
-        <label><input type="checkbox" id="showEcon" checked> Econ</label>
-        <label><input type="checkbox" id="showPolSci" checked> PolSci</label>
-        <label><input type="checkbox" id="showSoc" checked> Soc</label>
-        <label><input type="checkbox" id="showGenSci" checked> GenSci</label>
-        <label><input type="checkbox" id="showPA"> PA</label>
-        <label>| Colour by:
+        <div class="toggle-group">
+            <label><input type="checkbox" id="showEcon" checked> Econ</label>
+            <label><input type="checkbox" id="showPolSci" checked> PolSci</label>
+            <label><input type="checkbox" id="showSoc" checked> Soc</label>
+            <label><input type="checkbox" id="showGenSci" checked> GenSci</label>
+            <label><input type="checkbox" id="showPA"> PA</label>
+        </div>
+        <label class="control-group"><span class="control-label">Colour by</span>
             <select id="colorBy">
                 <option value="discipline">Discipline</option>
                 <option value="concept">PA Concept</option>
             </select>
         </label>
-        <label>| Min. citations:
-            <input type="range" id="citeFilter" min="0" max="500" value="0" style="width:120px;">
-            <span id="citeVal">0</span>
-        </label>
-        <label>| Years:
-            <input type="number" id="yearFrom" style="width:72px;">
-            &ndash;
-            <input type="number" id="yearTo" style="width:72px;">
-            <button type="button" id="yearReset">All</button>
-        </label>
+        <div class="control-group">
+            <span class="control-label">Min. citations</span>
+            <div class="range-control">
+                <input type="range" id="citeFilter" min="0" max="500" value="0">
+                <span id="citeVal">0</span>
+            </div>
+        </div>
+        <div class="control-group">
+            <span class="control-label">Years</span>
+            <div class="year-range">
+                <input type="number" id="yearFrom">
+                <span>&ndash;</span>
+                <input type="number" id="yearTo">
+                <button type="button" id="yearReset">All</button>
+            </div>
+        </div>
     </div>
 
     <div id="legendBox"></div>
@@ -131,9 +273,9 @@
     <p class="stats">1607 articles, 8988 edges. Only articles with at least one edge shown.</p>
 
     <div id="tooltip"></div>
-    <div id="networkWrap" style="position:relative; width:1120px; height:700px; border:2px solid #666; background:#fff;">
-        <canvas id="edgeCanvas" width="1120" height="700" style="position:absolute; top:0; left:0;"></canvas>
-        <svg id="network" width="1120" height="700" style="position:absolute; top:0; left:0; cursor:grab;"></svg>
+    <div id="networkWrap" class="network-stage">
+        <canvas id="edgeCanvas"></canvas>
+        <svg id="network" aria-label="Co-citation Network visualization"></svg>
     </div>
 
     <div class="footer">
@@ -187,7 +329,8 @@
         });
     }
 
-    var width = 1120, height = 700;
+    var width = 0, height = 0;
+    var networkWrap = document.getElementById("networkWrap");
     var canvas = document.getElementById("edgeCanvas");
     var ctx = canvas.getContext("2d");
     var svg = d3.select("#network");
@@ -196,12 +339,13 @@
 
     // Shared transform state for canvas + SVG sync
     var currentTransform = d3.zoomIdentity;
-    svg.call(d3.zoom().scaleExtent([0.2, 5])
+    var zoomBehavior = d3.zoom().scaleExtent([0.2, 5])
         .on("zoom", function(event) {
             currentTransform = event.transform;
             g.attr("transform", currentTransform);
             drawEdges();
-        }));
+        });
+    svg.call(zoomBehavior);
 
     var simulation, nodeSel;
     var activeNodes = [], activeLinks = [];
@@ -218,6 +362,52 @@
         .attr("min", minYearAll)
         .attr("max", maxYearAll)
         .property("value", maxYearAll);
+
+    function getStageHeight(stageWidth) {
+        var viewportWidth = window.innerWidth || stageWidth;
+        var viewportHeight = window.innerHeight || 800;
+        if (viewportWidth <= 640) {
+            return Math.max(340, Math.min(Math.round(viewportHeight * 0.52), 520));
+        }
+        if (viewportWidth <= 960) {
+            return Math.max(420, Math.min(Math.round(stageWidth * 0.72), 620));
+        }
+        return 700;
+    }
+
+    function resizeNetwork(preserveView) {
+        var nextWidth = Math.max(280, Math.round(networkWrap.clientWidth));
+        var nextHeight = getStageHeight(nextWidth);
+        if (nextWidth === width && nextHeight === height) return;
+
+        var prevWidth = width || nextWidth;
+        var prevHeight = height || nextHeight;
+
+        width = nextWidth;
+        height = nextHeight;
+
+        networkWrap.style.height = height + "px";
+        canvas.width = width;
+        canvas.height = height;
+        svg.attr("width", width).attr("height", height).attr("viewBox", "0 0 " + width + " " + height);
+
+        if (preserveView) {
+            currentTransform = d3.zoomIdentity
+                .translate(currentTransform.x * (width / prevWidth), currentTransform.y * (height / prevHeight))
+                .scale(currentTransform.k);
+        } else {
+            currentTransform = d3.zoomIdentity;
+        }
+
+        svg.call(zoomBehavior.transform, currentTransform);
+
+        if (simulation) {
+            simulation.force("center", d3.forceCenter(width / 2, height / 2));
+            simulation.alpha(0.2).restart();
+        }
+
+        drawEdges();
+    }
 
     function drawEdges() {
         ctx.save();
@@ -365,6 +555,15 @@
         render();
     });
 
+    var resizeTimer;
+    window.addEventListener("resize", function() {
+        window.clearTimeout(resizeTimer);
+        resizeTimer = window.setTimeout(function() {
+            resizeNetwork(true);
+        }, 100);
+    });
+
+    resizeNetwork(false);
     render();
 })();
 </script>
